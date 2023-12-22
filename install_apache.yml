@@ -5,18 +5,13 @@
   tasks:
 
   - name: update repository index
-    apt:
+    package:
       update_cache: yes
     when: ansible_distribution == "Ubuntu"
 
-  - name: install apache2 package
+  - name: install apache and php packages
     apt:
-      name: apache2
+      name:
+        - "{{ apache_package }}"
+        - "{{ php_package }}"
       state: latest
-    when: ansible_distribution == "Ubuntu"
-
-  - name: add php support for apache
-    apt:
-      name: libapache2-mod-php
-      state: latest
-    when: ansible_distribution == "Ubuntu"
