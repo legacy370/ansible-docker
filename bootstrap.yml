@@ -4,15 +4,22 @@
   become: true
   pre_tasks:
 
+  - name: install updates (Ubuntu)
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
 - hosts: all
   become: true
   tasks:
 
-  - name: create noson
+  - name: create noson user
     tags: always
     user:
       name: noson
-      group: root
+      groups: root
 
   - name: add ssh key for noson
     tags: always
@@ -26,14 +33,6 @@
       dest: /etc/sudoers.d/noson
       owner: root
       group: root
-
-  - name: install updates (Ubuntu)
-    tags: always
-    apt:
-      upgrade: dist
-      update_cache: yes
-    changed_when: false
-    when: ansible_distribution == "Ubuntu"
 
 - hosts: web_servers
 
