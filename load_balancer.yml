@@ -20,8 +20,8 @@
   - name: Create application load balancer
     vars:
       region: us-east-1
-      aws_access_key_id: AKIAIWHHRVGMSRQWMY5A
-      aws_secret_access_key: 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
+      aws_access_key_id: need_a_variable_here
+      aws_secret_access_key: need_a_variable_here
     amazon.aws.elb_application_lb:
       state: present
       name: "shalomcloud-web3-lb"
