@@ -1,0 +1,49 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+  - name: Install boto, boto3 and botocore
+    pip:
+      name: "{{ item }}"
+    loop:
+      - boto
+      - boto3
+      - botocore
+
+  - name: update repository index
+    package:
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+    # Create an ALB and attach a listener
+  - name: Create application load balancer
+    vars:
+      region: us-east-1
+      aws_access_key_id: <need a variable here>
+      aws_secret_access_key: <need a variable here>
+    amazon.aws.elb_application_lb:
+      state: present
+      name: "shalomcloud-web3-lb"
+      scheme: "internet-facing"
+      region: "{{ region }}"
+      aws_access_key_id: "{{ aws_access_key_id }}"
+      aws_secret_access_key: "{{ aws_secret_access_key }}"
+      subnets:
+        - subnet-de0e3bf5
+        - subnet-989491c1
+        - subnet-12b35164
+        - subnet-e11785ed
+      security_groups:
+        - sg-4bb36b2d
+        - sg-05d3d105b431791bc
+      listeners:
+        - Protocol: HTTPS # Required. The protocol for connections from clients to the load balancer (HTTP or HTTPS) (case-sensitive).
+          Port: 443 # Required. The port on which the load balancer is listening.
+        # The security policy that defines which ciphers and protocols are supported. The default is the current predefined security policy.
+          SslPolicy: ELBSecurityPolicy-2015-05
+          Certificates: # The ARN of the certificate (only one certficate ARN should be provided)
+            - CertificateArn: arn:aws:acm:us-east-1:301467146538:certificate/39be313a-3224-4d1b-884a-1f6b7d9584ba
+          DefaultActions:
+            - Type: forward # Required.
+              TargetGroupName: awseb-e-8-AWSEBLoa-K9ZBMBWD9R8Q
