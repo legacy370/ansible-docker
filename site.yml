@@ -4,18 +4,24 @@
   become: true
   pre_tasks:
 
+  - name: install updates (Ubuntu)
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Ubuntu"
+
 - hosts: all
   become: true
   tasks:
 
   - name: create noson
-    tags: always
     user:
       name: noson
       group: root
 
   - name: add ssh key for noson
-    tags: always
     authorized_key:
       user: noson
       key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEMNZsl9agbYCPZtmHb7bD/Q0F7MfZUHzAh6PKO4kaRS norman@DESKTOP-V8NHROR" 
@@ -26,14 +32,6 @@
       dest: /etc/sudoers.d/noson
       owner: root
       group: root
-
-  - name: install updates (Ubuntu)
-    tags: always
-    apt:
-      upgrade: dist
-      update_cache: yes
-    changed_when: false
-    when: ansible_distribution == "Ubuntu"
 
 - hosts: web_servers
 
@@ -75,3 +73,13 @@
       group: root
       mode: 0644
 
+- hosts: db_servers
+  become: true
+  tasks:
+
+  - name: install mariadb server
+    tags: mariadb
+    apt:
+      name: mariadb-server
+      state: latest
+    when: ansible_distribution == "Ubuntu"
