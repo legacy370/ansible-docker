@@ -12,29 +12,7 @@
     changed_when: false
     when: ansible_distribution == "Ubuntu"
 
-- hosts: all
-  become: true
-  tasks:
-
-  - name: create noson
-    user:
-      name: noson
-      group: root
-
-  - name: add ssh key for noson
-    authorized_key:
-      user: noson
-      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEMNZsl9agbYCPZtmHb7bD/Q0F7MfZUHzAh6PKO4kaRS norman@DESKTOP-V8NHROR" 
-
-  - name: add sudoers file for noson
-    copy:
-      src: sudoer_noson
-      dest: /etc/sudoers.d/noson
-      owner: root
-      group: root
-
 - hosts: web_servers
-
   become: true
   tasks:
 

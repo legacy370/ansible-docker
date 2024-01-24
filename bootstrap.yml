@@ -33,44 +33,5 @@
       dest: /etc/sudoers.d/noson
       owner: root
       group: root
-
-- hosts: web_servers
-
-  become: true
-  tasks:
-
-  - name: install apache and php for Ubuntu servers
-    tags: apache,php
-    apt:
-      name:
-        - apache2
-        - libapache2-mod-php
-      state: latest
-    when: ansible_distribution == "Ubuntu"
-
-  - name: start apache (not needed on Ubuntu)
-    tags: apache
-    vars: 
-      package_name: apache2
-    service:
-      name: "{{ package_name }}"
-      state: started
-      enabled: yes
-    register: apache2
-
-  - name: restart apache2
-    tags: apache
-    service:
-      name: apache2
-      state: restarted
-    when: apache2.changed
-
-  - name: copy default html file
-    tags: apache
-    copy:
-      src: default_site.html
-      dest: /var/www/html/index.html
-      owner: root
-      group: root
-      mode: 0644
+      mode: 0440
 
