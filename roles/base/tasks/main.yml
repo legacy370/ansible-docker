@@ -1,0 +1,4 @@
+- name: add ssh key for noson
+  authorized_key:
+    user: noson
+    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEMNZsl9agbYCPZtmHb7bD/Q0F7MfZUHzAh6PKO4kaRS norman@DESKTOP-V8NHROR" 
