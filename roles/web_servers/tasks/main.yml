@@ -2,8 +2,8 @@
   tags: apache,php
   apt:
     name:
-      - apache2
-      - libapache2-mod-php
+      - "{{ apache_package_name }}"
+      - "{{ php_package_name }}"
     state: latest
   when: ansible_distribution == "Ubuntu"
 
@@ -12,17 +12,9 @@
   vars: 
     package_name: apache2
   service:
-    name: "{{ package_name }}"
+    name: "{{ apache_service }}"
     state: started
     enabled: yes
-  register: apache2
-
-- name: restart apache2
-  tags: apache
-  service:
-    name: apache2
-    state: restarted
-  when: apache2.changed
 
 - name: copy default html file
   tags: apache
@@ -32,4 +24,5 @@
     owner: root
     group: root
     mode: 0644
+  notify: restart_apache
 
